@@ -23,7 +23,7 @@ functions), **Stripe** (credits/subscription), **Anthropic** (AI narrative).
 ## Layer map (`src/`)
 
 ```
-data/        Pure content tables — the moat. ~18k lines: institutionalCatalog,
+data/        Pure content tables — the moat. ~65k lines (about 41k generated): institutionalCatalog,
              namingData, supplyChainData, npcData, historyData, … No logic.
 kernel/      Determinism primitives — the seeded-PRNG seam (prng.js) and its
              global context (rngContext.js). Tiny, dependency-free (only
@@ -43,7 +43,7 @@ domain/      Pure business logic that ISN'T generation: causal state, events,
              entities, contradictions, provenance, migrations, schema, summary,
              the renderer-neutral settlement-scene projection and manifest
              compiler (`townScene/`; one canonical truth for 2D and 3D),
-             the **campaign world-pulse simulation** (`worldPulse/` — ~410 modules
+             the **campaign world-pulse simulation** (`worldPulse/` — ~460 modules
              that age a canonized region tick-by-tick: proposals, party impacts,
              the multi-tick interval orchestrator, PLUS the geopolitical
              subsystems — war & siege (`warDeployment`/`occupation`/`attrition`/
@@ -51,7 +51,7 @@ domain/      Pure business logic that ISN'T generation: causal state, events,
              `tradeSalience`), religion (`religionState`/`pantheon`/`religiousContest`/
              divine mandate), coups & faction competition, and NPC agency; the
              shared sim-shape typedefs live in `pulseShapes.js`), the **spatial-canon
-             engine** (`spatial/` — the Phase 5.5 KEYSTONE, 30 modules that make the
+             engine** (`spatial/` — the Phase 5.5 KEYSTONE, 36 modules that make the
              realm map a first-class engine input; see "The spatial engine" below),
              regional causality (`region/`), and the fail-closed public-safe display
              projection (`display/`). Every roll forks a seeded, injected RNG (determinism is
@@ -146,7 +146,7 @@ saves when the shape changes.
 
 ## The spatial engine + the engine-wave stack
 
-Phase 5.5 added a **spatial-canon engine** (`src/domain/spatial/`, 30 modules)
+Phase 5.5 added a **spatial-canon engine** (`src/domain/spatial/`, 36 modules)
 that promotes the realm map to a first-class engine input: settlements carry
 positions, neighbours, and travel costs, and an M1–M11 "mover ladder" ages the
 realm tick-by-tick (migration, trade lanes, war fronts, discovery, calamity,
