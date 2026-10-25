@@ -68,8 +68,14 @@ opens, which he may merge, cherry-pick or ignore (see "Porting").
   process commits (rules, hooks, gate) and Dustin's own code commits.
 - Work branches are cut from `lab`: `git switch lab && git switch -c fix/short-name`. One change per
   branch; merge back into `lab` with `git merge --no-ff` once the lab gate is green.
-- Throwaway experiments go on `lab/<name>` branches and are never ported.
+- Throwaway experiments go on `lab-<name>` branches and are never ported. (Git cannot hold both `lab` and `lab/x`, so our world is `lab` and `lab-*`.)
 - To take the founder's new work: `git fetch upstream`, then on `lab`: `git merge upstream/master`.
+
+Our world is `lab`, `lab-*` and their worktrees, in the fork only. These limits bind agents working
+for Dustin in this lab; they do not apply to the project's owner, who may read, port, cherry-pick or
+take over any lab branch at any time. Mechanical guards (untracked, in `.git/lab-hooks`): commits and
+merges are refused outside `lab`/`lab-*`; pushes are refused unless they go to the fork and to
+`lab`/`lab-*`, and never delete. Do not change `core.hooksPath` or the remotes' URLs.
 
 ## Commands
 
@@ -108,13 +114,13 @@ Only when Dustin says so. Code commits only.
 
 1. On `lab`, the change is already in code-only commits (rule 9) and the lab gate is green.
 2. `sh scripts/lab-port.sh <short-name> <sha> [<sha> ...]` makes a worktree `../settlement-engine-port-<short-name>`
-   on branch `port/<short-name>`, cut from the latest `upstream/master`, with those commits
+   on branch `lab-port-<short-name>`, cut from the latest `upstream/master`, with those commits
    cherry-picked. It refuses commits that touch process files.
 3. In that worktree: link or install `node_modules`, then `npm run check:tail; echo "exit=$?"`. His
    CI runs the same gate plus more, so a red here is a red there. His pre-push hook also runs
    when you push the port branch; let it finish.
-4. `git push -u origin port/<short-name>` (the fork). Then, only on Dustin's go-ahead:
-   `gh pr create --repo clausellstokes-lang/settlement-engine --head jaddai0:port/<short-name> --base master --title "..." --body-file <file outside the repo>`.
+4. `git push -u origin lab-port-<short-name>` (the fork). Then, only on Dustin's go-ahead:
+   `gh pr create --repo clausellstokes-lang/settlement-engine --head jaddai0:lab-port-<short-name> --base master --title "..." --body-file <file outside the repo>`.
 5. PR body: one line on what changed and why it is small; one line stating `npm run check:tail`
    passed with its real exit code (or why it could not run); a **What the diff doesn't show**
    section only when at least one is true: the reason is not visible in the code; behavior changes

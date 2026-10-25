@@ -1,7 +1,7 @@
 #!/bin/sh
 # lab-port.sh — prepare a pull request branch for the friend: his code, none of our process.
 #   sh scripts/lab-port.sh <short-name> <code-commit-sha> [<sha> ...]
-# Creates ../settlement-engine-port-<short-name> as a new worktree on branch port/<short-name>,
+# Creates ../settlement-engine-port-<short-name> as a new worktree on branch lab-port-<short-name>,
 # cut from the latest upstream/master, and cherry-picks the listed commits there. Refuses any
 # commit that touches lab-only files. Nothing is pushed and no PR is opened.
 set -u
@@ -18,7 +18,7 @@ for sha in "$@"; do
   fi
 done
 WT="$(dirname "$ROOT")/settlement-engine-port-$NAME"
-git worktree add -b "port/$NAME" "$WT" upstream/master || exit 1
+git worktree add -b "lab-port-$NAME" "$WT" upstream/master || exit 1
 cd "$WT" || exit 1
 git cherry-pick -x "$@" || { echo "cherry-pick stopped; resolve in $WT, then 'git cherry-pick --continue'"; exit 1; }
 # This worktree has HIS CLAUDE.md/AGENTS.md. Say what it is, in an untracked file.
@@ -30,4 +30,4 @@ The rules are `docs/LANE_RULES.md` on branch `lab` in the main checkout. Port pr
 run `npm run check:tail; echo "exit=$?"` here, then stop and report to Dustin. No PR until he says so.
 LOCAL
 cp CLAUDE.local.md AGENTS.local.md
-echo "ready: $WT (branch port/$NAME). Next: ln -s \"$ROOT/node_modules\" node_modules  (or npm ci), then npm run check:tail; echo \"exit=\$?\""
+echo "ready: $WT (branch lab-port-$NAME). Next: ln -s \"$ROOT/node_modules\" node_modules  (or npm ci), then npm run check:tail; echo \"exit=\$?\""
