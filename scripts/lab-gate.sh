@@ -61,10 +61,10 @@ if [ "$MODE" = quick ]; then
     step BLOCKING lint-changed sh -c 'xargs npx eslint <"$1"' _ "$CHANGED"
     step BLOCKING tests-related sh scripts/gate-mutex.sh --run -- sh -c 'xargs npx vitest related --run <"$1"' _ "$CHANGED"
   fi
-  step BLOCKING typecheck-domain npx tsc --noEmit
+  step BLOCKING typecheck-domain node scripts/check-domain-strict.mjs
 else
   step BLOCKING lint npm run lint
-  step BLOCKING typecheck-domain npx tsc --noEmit
+  step BLOCKING typecheck-domain node scripts/check-domain-strict.mjs
   step BLOCKING typecheck-ratchet node scripts/check-full-typecheck.mjs
   step BLOCKING tests-behavior sh scripts/gate-mutex.sh --run -- npx vitest run \
     --exclude 'tests/lint/**' --exclude 'tests/docs/**' --exclude 'tests/scripts/**' \

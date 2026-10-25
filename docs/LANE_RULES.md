@@ -75,7 +75,7 @@ opens, which he may merge, cherry-pick or ignore (see "Porting").
 
 ```bash
 sh scripts/lab-setup.sh            # once per checkout: ledger branch, remotes check, npm ci
-sh scripts/lab-gate.sh quick       # seconds-minutes: changed-file lint, domain types, related tests
+sh scripts/lab-gate.sh quick       # seconds-minutes: changed-file lint, domain type ratchet, related tests
 sh scripts/lab-gate.sh full        # lab gate (below); run on an idle machine, ~15-20 min
 npm run check:tail; echo "exit=$?" # the founder's full gate; required before a PR to him
 npm run dev                        # app on :5175 (vite)
@@ -87,7 +87,7 @@ The lab gate (`full`) runs these, prints each exit code, never stops at the firs
 | Step | Kind | What it is |
 |---|---|---|
 | lint | blocking | `npm run lint` (eslint over src, tests, scripts) |
-| typecheck-domain | blocking | `npx tsc --noEmit` |
+| typecheck-domain | blocking | `node scripts/check-domain-strict.mjs` (per-file ceiling; raw `tsc` has 1,100+ old errors) |
 | typecheck-ratchet | blocking | `node scripts/check-full-typecheck.mjs` (per-file ceiling) |
 | tests-behavior | blocking | all Vitest tests except the founder's process-policing folders |
 | build | blocking | `npm run build` |
